@@ -19,6 +19,9 @@ Set of bash shell scripts to generate OTP *value* from token using TOTP.
 
 ## Installation
 You should run `setup.sh` to install required tools (Linux)
+```
+./setup.sh
+```
 
 ### Usage
 
