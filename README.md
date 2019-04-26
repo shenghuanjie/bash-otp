@@ -11,13 +11,17 @@ This script supports both encrypted and plain-text token files, but my reccomend
 
 * oathtool (http://www.nongnu.org/oath-toolkit/)
 * OpenSSL
-* xclip (Linux)
+* sshpass
 
 ## Description
 
 Set of bash shell scripts to generate OTP *value* from token using TOTP.
 
 ### Usage
+
+0. You should get your "secret" from Non-LBL token management page following this instruction
+http://research-it.berkeley.edu/services/high-performance-computing/using-authy-desktop-computer-generate-one-time-passwords-savio
+> It should be noted that you don't need to download Authy, getting the secret is enough.
 
 First ensure that there is a directory "tokenfiles" in the main dir where the script resides.
 

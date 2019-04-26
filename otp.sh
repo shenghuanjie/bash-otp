@@ -9,23 +9,34 @@
 
 # Init
 TOKENFILES_DIR="$( dirname ${0} )/tokenfiles"
+PASSWORD_DIR="$( dirname ${0} )/keys"
 TOKENFILES_DIR_MODE="$( ls -ld ${TOKENFILES_DIR} | awk '{print $1}'| sed 's/.//' )"
 U_MODE="$( awk  -F '' '{print $1 $2 $3}' <<< "$TOKENFILES_DIR_MODE" )"
 G_MODE="$( awk  -F '' '{print $4 $5 $6}' <<< "$TOKENFILES_DIR_MODE" )"
 A_MODE="$( awk  -F '' '{print $7 $8 $9}' <<< "$TOKENFILES_DIR_MODE" )"
-
 
 if [ "$( echo $G_MODE | egrep 'r|w|x' )" -o "$( echo $A_MODE | egrep 'r|w|x' )" ]; then
     echo "Perms on [${TOKENFILES_DIR}] are too permissive. Try 'chmod 700 ${TOKENFILES_DIR}' first"
     exit 1
 fi
 
+PASSWORD_DIR_MODE="$( ls -ld ${PASSWORD_DIR} | awk '{print $1}'| sed 's/.//' )"
+U_MODE="$( awk  -F '' '{print $1 $2 $3}' <<< "$PASSWORD_DIR_MODE" )"
+G_MODE="$( awk  -F '' '{print $4 $5 $6}' <<< "$PASSWORD_DIR_MODE" )"
+A_MODE="$( awk  -F '' '{print $7 $8 $9}' <<< "$PASSWORD_DIR_MODE" )"
+
+if [ "$( echo $G_MODE | egrep 'r|w|x' )" -o "$( echo $A_MODE | egrep 'r|w|x' )" ]; then
+    echo "Perms on [${PASSWORD_DIR}] are too permissive. Try 'chmod 700 ${PASSWORD_DIR}' first"
+    exit 1
+fi
+
+
 token="$1"
 if [ -z "$token" ]; then echo "Need token filename"; exit 1; fi
 
 # Returns the token
 function get_decrypted_token_from_file {
-    read -s -r -p "Password: " PASSWORD
+    read -s -r -p "Password for secret: " PASSWORD
     echo $PASSWORD | openssl enc -aes-256-cbc -d -salt -pass stdin -in ${TOKENFILES_DIR}/${token}.enc
 }
 
@@ -52,7 +63,18 @@ if [ $D -lt 0 ] ; then D="00"; fi
 D="$( date  +%S )"
 X=$( oathtool --totp -b "$TOKEN" )
 
-sudo sshpass -p "$X" ssh shenghuanjie@ln003.brc.berkeley.edu
+# Returns the token
+if [[ -f "${TOKENFILES_DIR}/${token}.enc" ]]; then
+    read -s -r -p "Password for Savio cluster: " PASSWORD
+    CODE=$( echo $PASSWORD | openssl enc -aes-256-cbc -d -salt -pass stdin -in ${PASSWORD_DIR}/${token}.enc )
+elif [[ -f "${TOKENFILES_DIR}/${token}" ]]; then
+    CODE=$( cat ${PASSWORD_DIR}/${token} )
+else
+    echo "ERROR: Key file [${PASSWORD_DIR}/$token] doesn't exist"
+    exit
+fi
+
+sudo sshpass -p "$CODE$X" ssh shenghuanjie@ln003.brc.berkeley.edu
 
 # while true; do
 #     D="$( date  +%S )"
