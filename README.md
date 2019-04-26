@@ -49,8 +49,12 @@ Second ensure that there is a directory "keys" in the main dir where the script 
   tokenname.enc
   ```
 
-  2. You should do the same for your plain password of your account on the Savio cluster. (Without One Time Passcode)
-  store it in "keys/tokenname"
+  2. You should do the same for your account name and your plain password of your account on the Savio cluster. (Without One Time Passcode)
+  store it in "keys/tokenname" in the first two lines like:
+  ```
+  echo "yourusername" > keys/tokenname
+  echo "yourpassword" >> keys/tokenname
+  ```
   > It should be noted that the file name of your password can be the same as the token
   If you use different names, password file name needs to be specified after tokenname
 
