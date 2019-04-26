@@ -42,7 +42,7 @@ Second ensure that there is a directory "keys" in the main dir where the script 
   $ ./otp-lockfile.sh tokenfiles/tokenname
   Password: (enter a good password)
   ```
-  
+  > You can choose to be lazy but insecure and not encrypt these files so that you don't need to type in the password 
   1. Confirm it worked:
   ```bash
   $ ls tokenfiles/
