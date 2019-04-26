@@ -34,6 +34,10 @@ fi
 token="$1"
 if [ -z "$token" ]; then echo "Need token filename"; exit 1; fi
 
+password="$2"
+if [ -z "$password" ]; then password="$token"; fi
+
+
 # Returns the token
 function get_decrypted_token_from_file {
     read -s -r -p "Password for secret: " PASSWORD
@@ -64,13 +68,13 @@ D="$( date  +%S )"
 X=$( oathtool --totp -b "$TOKEN" )
 
 # Returns the token
-if [[ -f "${TOKENFILES_DIR}/${token}.enc" ]]; then
+if [[ -f "${TOKENFILES_DIR}/${password}.enc" ]]; then
     read -s -r -p "Password for Savio cluster: " PASSWORD
-    CODE=$( echo $PASSWORD | openssl enc -aes-256-cbc -d -salt -pass stdin -in ${PASSWORD_DIR}/${token}.enc )
-elif [[ -f "${TOKENFILES_DIR}/${token}" ]]; then
-    CODE=$( cat ${PASSWORD_DIR}/${token} )
+    CODE=$( echo $PASSWORD | openssl enc -aes-256-cbc -d -salt -pass stdin -in ${PASSWORD_DIR}/${password}.enc )
+elif [[ -f "${TOKENFILES_DIR}/${password}" ]]; then
+    CODE=$( cat ${PASSWORD_DIR}/${password} )
 else
-    echo "ERROR: Key file [${PASSWORD_DIR}/$token] doesn't exist"
+    echo "ERROR: Key file [${PASSWORD_DIR}/$password] doesn't exist"
     exit
 fi
 

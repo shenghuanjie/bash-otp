@@ -17,6 +17,9 @@ This script supports both encrypted and plain-text token files, but my reccomend
 
 Set of bash shell scripts to generate OTP *value* from token using TOTP.
 
+## Installation
+You should run `setup.sh` to install required tools (Linux)
+
 ### Usage
 
 0. You should get your "secret" from Non-LBL token management page following this instruction
@@ -43,9 +46,14 @@ First ensure that there is a directory "tokenfiles" in the main dir where the sc
   tokenname.enc
   ```
 
+  2. You should do the same for your plain password for the Savio cluster. (Without ONP)
+  store it in "keys/tokenname"
+  > It should be noted that the file name of your password can be the same as the token
+  If you use different names, password file name needs to be specified after tokenname
+
 1. Run otp.sh; will produce roughly the following output:
   ```
-$ ./otp.sh tokenname
+$ ./otp.sh tokenname [passwordname]
 Password:
 02: 123456
   ```
