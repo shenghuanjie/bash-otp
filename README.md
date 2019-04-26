@@ -58,9 +58,12 @@ Second ensure that there is a directory "keys" in the main dir where the script 
   > It should be noted that the file name of your password can be the same as the token
   If you use different names, password file name needs to be specified after tokenname
 
-1. Run otp.sh; will produce roughly the following output:
+3. Run otp.sh; will produce roughly the following output:
   ```
 $ ./otp.sh tokenname [passwordname]
+Password for secret(token): 
+
+Password for Savio cluster: 
   ```
   
   You might be asked for password if you have encrypted your files.  Otherwise, you should log in to the cluster right away.
