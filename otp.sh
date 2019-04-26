@@ -80,8 +80,10 @@ fi
 
 USERNAME=$(echo $CODE | awk '{print $1}')
 PLAINCODE=$(echo $CODE | awk '{print $2}')
+NODE=$(echo $CODE | awk '{print $3}')
+if [[ -z $NODE ]]; then NODE="hpc"; fi
 
-sshpass -p "$USERNAME$X" ssh "$PLAINCODE@hpc.brc.berkeley.edu"
+sshpass -p "$PLAINCODE$X" ssh $USERNAME@$NODE.brc.berkeley.edu
 
 # while true; do
 #     D="$( date  +%S )"
