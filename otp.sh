@@ -64,10 +64,6 @@ D="$( date  +%S )"
 if [ $D -gt 30 ] ; then D=$( echo "$D - 30"| bc ); fi
 if [ $D -lt 0 ] ; then D="00"; fi
 
-D="$( date  +%S )"
-X=$( oathtool --totp -b "$TOKEN" )
-
-# Returns the token
 if [[ -f "${TOKENFILES_DIR}/${password}.enc" ]]; then
     read -s -r -p "Password for Savio cluster: " PASSWORD
     CODE=$( echo $PASSWORD | openssl enc -aes-256-cbc -d -salt -pass stdin -in ${PASSWORD_DIR}/${password}.enc )
@@ -78,6 +74,7 @@ else
     exit
 fi
 
+X=$( oathtool --totp -b "$TOKEN" )
 USERNAME=$(echo $CODE | awk '{print $1}')
 PLAINCODE=$(echo $CODE | awk '{print $2}')
 NODE=$(echo $CODE | awk '{print $3}')
