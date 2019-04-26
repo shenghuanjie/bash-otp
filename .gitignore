@@ -1,0 +1,6 @@
+2fa/
+tokenfiles/*
+!tokenfiles/.*
+keys/*
+!/keys/.*
+.*.swp
