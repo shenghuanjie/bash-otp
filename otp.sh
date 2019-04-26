@@ -78,7 +78,7 @@ else
     exit
 fi
 
-sudo sshpass -p "$CODE$X" ssh shenghuanjie@ln003.brc.berkeley.edu
+sshpass -p "$CODE$X" ssh shenghuanjie@ln003.brc.berkeley.edu
 
 # while true; do
 #     D="$( date  +%S )"
