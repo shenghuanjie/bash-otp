@@ -57,16 +57,9 @@ Second ensure that there is a directory "keys" in the main dir where the script 
 1. Run otp.sh; will produce roughly the following output:
   ```
 $ ./otp.sh tokenname [passwordname]
-Password:
-02: 123456
   ```
-
-The number on the left is the seconds counter; a new TOTP token is generated every 30 seconds.
-
-The number on the right is the 6-digit One-Time Password.
-
-This will be copied directly into the paste buffer. Just press "Command-V" (or "CTRL-V" on Linux) to paste into a login dialog.
-
+  
+  You might be asked for password if you have encrypted your files.  Otherwise, you should log in to the cluster right away.
 
 ## Contents
 

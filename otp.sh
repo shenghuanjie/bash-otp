@@ -40,7 +40,7 @@ if [ -z "$password" ]; then password="$token"; fi
 
 # Returns the token
 function get_decrypted_token_from_file {
-    read -s -r -p "Password for secret: " PASSWORD
+    read -s -r -p "Password for secret(token): " PASSWORD
     echo $PASSWORD | openssl enc -aes-256-cbc -d -salt -pass stdin -in ${TOKENFILES_DIR}/${token}.enc
 }
 
@@ -78,7 +78,10 @@ else
     exit
 fi
 
-sshpass -p "$CODE$X" ssh shenghuanjie@ln003.brc.berkeley.edu
+USERNAME=$(echo $CODE | awk '{print $1}')
+PLAINCODE=$(echo $CODE | awk '{print $2}')
+
+sshpass -p "$USERNAME$X" ssh "$PLAINCODE@hpc.brc.berkeley.edu"
 
 # while true; do
 #     D="$( date  +%S )"
