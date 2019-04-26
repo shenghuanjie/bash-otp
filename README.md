@@ -25,14 +25,14 @@ You should run `setup.sh` to install required tools (Linux)
 
 ### Usage
 
-0. You should get your "secret" from Non-LBL token management page following this [instruction](http://research-it.berkeley.edu/services/high-performance-computing/using-authy-desktop-computer-generate-one-time-passwords-savio) from step 11 to 19. Please ignore the other steps.
+0. You should get your "secret"(token) from Non-LBL token management page following this [instruction](http://research-it.berkeley.edu/services/high-performance-computing/using-authy-desktop-computer-generate-one-time-passwords-savio) from step 11 to 19. Please ignore the other steps.
 > It should be noted that you don't need to download Authy, getting the secret(token) is enough.
 
 First ensure that there is a directory "tokenfiles" in the main dir where the script resides.
 Second ensure that there is a directory "keys" in the main dir where the script resides.
 
 1. Create token file and encrypt it. Resulting file, "tokenfiles/tokenname.enc", is an encrypted file containing the token
-  1. Put your token in a plaintext file in the tokenfiles/ directory:
+  1. Put your secret(token) in a plaintext file in the tokenfiles/ directory:
   ```bash
   $ echo "1234567890abcdef" > tokenfiles/tokenname
   ```
@@ -49,7 +49,7 @@ Second ensure that there is a directory "keys" in the main dir where the script 
   tokenname.enc
   ```
 
-  2. You should do the same for your plain password for the Savio cluster. (Without ONP)
+  2. You should do the same for your plain password of your account on the Savio cluster. (Without One Time Passcode)
   store it in "keys/tokenname"
   > It should be noted that the file name of your password can be the same as the token
   If you use different names, password file name needs to be specified after tokenname
