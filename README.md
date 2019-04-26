@@ -25,7 +25,7 @@ You should run `setup.sh` to install required tools (Linux)
 
 ### Usage
 
-0. You should get your "secret" from Non-LBL token management page following this [instruction](http://research-it.berkeley.edu/services/high-performance-computing/using-authy-desktop-computer-generate-one-time-passwords-savio)
+0. You should get your "secret" from Non-LBL token management page following this [instruction](http://research-it.berkeley.edu/services/high-performance-computing/using-authy-desktop-computer-generate-one-time-passwords-savio) from step 11 to 19. Please ignore the other steps.
 > It should be noted that you don't need to download Authy, getting the secret(token) is enough.
 
 First ensure that there is a directory "tokenfiles" in the main dir where the script resides.
