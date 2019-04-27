@@ -68,7 +68,9 @@ Password for Savio cluster:
   
   You might be asked for password if you have encrypted your files.  Otherwise, you should log in to the cluster right away.
 
+# IMPORTANT!
   **Please do NOT frequently log in using this method! You can only use the one time passcode once and it only gets renewed every 30 seconds!**
+  **If you log in multiple time with the used one time passcode, your account might be locked!**
 
 ## Contents
 
