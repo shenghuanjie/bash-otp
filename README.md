@@ -68,6 +68,9 @@ Password for Savio cluster:
   
   You might be asked for password if you have encrypted your files.  Otherwise, you should log in to the cluster right away.
 
+# IMPORTANT!!!
+  **Please do NOT frequently log in using this method! Frequently logging in might trigger security measures on the cluster blocking your access.**
+
 ## Contents
 
 * Script to do the actual value generation
