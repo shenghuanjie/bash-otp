@@ -74,58 +74,27 @@ else
     exit
 fi
 
+X=$( oathtool --totp -b "$TOKEN" )
 USERNAME=$(echo $CODE | awk '{print $1}')
 PLAINCODE=$(echo $CODE | awk '{print $2}')
 NODE=$(echo $CODE | awk '{print $3}')
 if [[ -z $NODE ]]; then NODE="hpc"; fi
 
-# mount home
-X=$( oathtool --totp -b "$TOKEN" )
-saviokey=$PLAINCODE$X
-saviopath="$USERNAME@dtn.brc.berkeley.edu:/global/home/users/$USERNAME/"
-if mountpoint -q ~/savio/home; then
-    sudo umount -f ~/savio/home
-    echo "umount ~/savio/home"
-fi
-sudo sshfs -o allow_other,password_stdin,reconnect,ServerAliveInterval=15,ServerAliveCountMax=3 $saviopath ~/savio/home <<< "$saviokey"
+sshpass -p "$PLAINCODE$X" ssh $USERNAME@$NODE.brc.berkeley.edu
 
-
-# mount scratch
-Y=$( oathtool --totp -b "$TOKEN" )
-attempt=1
-marks=( '/' '-' '\' '|' )
-while [ "$Y" == "$X" ];
-do
-    count=10
-    while [[ $count -gt 0 ]]; do
-     printf '%s\r' "Attempt $attempt (scratch): wait for a new OTP in $(printf %02d $count) seconds ${marks[i++ % ${#marks[@]}]}"
-     count=$((count-1))
-     sleep 1
-    done
-    Y=$( oathtool --totp -b "$TOKEN" )
-    attempt=$((attempt+1))
-done
-saviokey=$PLAINCODE$Y
-saviopath="$USERNAME@dtn.brc.berkeley.edu:/global/scratch/$USERNAME/"
-if mountpoint -q ~/savio/scratch; then
-    sudo umount -f ~/savio/scratch
-    echo "umount ~/savio/scratch"
-fi
-sudo sshfs -o allow_other,password_stdin,reconnect,ServerAliveInterval=15,ServerAliveCountMax=3 $saviopath ~/savio/scratch <<< "$saviokey"
-
-
-Z=$( oathtool --totp -b "$TOKEN" )
-attempt=1
-marks=( '/' '-' '\' '|' )
-while [ "$Y" == "$Z" ];
-do
-    count=10
-    while [[ $count -gt 0 ]]; do
-     printf '%s\r' "Attempt $attempt (login): wait for a new OTP in $(printf %02d $count) seconds ${marks[i++ % ${#marks[@]}]}"
-     count=$((count-1))
-     sleep 1
-    done
-    Z=$( oathtool --totp -b "$TOKEN" )
-    attempt=$((attempt+1))
-done
-sshpass -p "$PLAINCODE$Z" ssh $USERNAME@$NODE.brc.berkeley.edu
+# while true; do
+#     D="$( date  +%S )"
+#     X=$( oathtool --totp -b "$TOKEN" )
+#     if [ $D = '59'  -o $D = '29' ] ; then
+#         echo "$D: $X"
+#     else
+#         echo -ne "$D: $X\r"
+#     fi
+#     OS=$( uname )
+#     if [[ $OS = "Darwin" ]]; then
+#         echo -n $X | pbcopy
+#     elif [[ $OS = "Linux" ]]; then
+#         echo -n $X | xclip -sel clip
+#     fi
+#     sleep 1
+# done

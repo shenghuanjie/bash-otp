@@ -17,7 +17,7 @@ A_MODE="$( awk  -F '' '{print $7 $8 $9}' <<< "$TOKENFILES_DIR_MODE" )"
 
 if [ "$( echo $G_MODE | egrep 'r|w|x' )" -o "$( echo $A_MODE | egrep 'r|w|x' )" ]; then
     echo "Perms on [${TOKENFILES_DIR}] are too permissive. Try 'chmod 700 ${TOKENFILES_DIR}' first"
-    exit 1
+    # exit 1
 fi
 
 PASSWORD_DIR_MODE="$( ls -ld ${PASSWORD_DIR} | awk '{print $1}'| sed 's/.//' )"
@@ -27,7 +27,7 @@ A_MODE="$( awk  -F '' '{print $7 $8 $9}' <<< "$PASSWORD_DIR_MODE" )"
 
 if [ "$( echo $G_MODE | egrep 'r|w|x' )" -o "$( echo $A_MODE | egrep 'r|w|x' )" ]; then
     echo "Perms on [${PASSWORD_DIR}] are too permissive. Try 'chmod 700 ${PASSWORD_DIR}' first"
-    exit 1
+    # exit 1
 fi
 
 
@@ -54,7 +54,7 @@ elif [[ -f "${TOKENFILES_DIR}/${token}" ]]; then
     TOKEN=$( get_plaintext_token_from_file $token )
 else
     echo "ERROR: Key file [${TOKENFILES_DIR}/$token] doesn't exist"
-    exit 1
+    # exit 1
 fi
 
 #TOKEN=$( get_decrypted_token_from_file $token )
@@ -71,16 +71,16 @@ elif [[ -f "${TOKENFILES_DIR}/${password}" ]]; then
     CODE=$( cat ${PASSWORD_DIR}/${password} )
 else
     echo "ERROR: Key file [${PASSWORD_DIR}/$password] doesn't exist"
-    exit
+    # exit 1
 fi
 
+X=$( oathtool --totp -b "$TOKEN" )
 USERNAME=$(echo $CODE | awk '{print $1}')
 PLAINCODE=$(echo $CODE | awk '{print $2}')
 NODE=$(echo $CODE | awk '{print $3}')
 if [[ -z $NODE ]]; then NODE="hpc"; fi
 
 # mount home
-X=$( oathtool --totp -b "$TOKEN" )
 saviokey=$PLAINCODE$X
 saviopath="$USERNAME@dtn.brc.berkeley.edu:/global/home/users/$USERNAME/"
 if mountpoint -q ~/savio/home; then
@@ -98,7 +98,7 @@ while [ "$Y" == "$X" ];
 do
     count=10
     while [[ $count -gt 0 ]]; do
-     printf '%s\r' "Attempt $attempt (scratch): wait for a new OTP in $(printf %02d $count) seconds ${marks[i++ % ${#marks[@]}]}"
+     printf '%s\r' "Attempt $attempt: wait for a new OTP in $(printf %02d $count) seconds ${marks[i++ % ${#marks[@]}]}"
      count=$((count-1))
      sleep 1
     done
@@ -112,20 +112,3 @@ if mountpoint -q ~/savio/scratch; then
     echo "umount ~/savio/scratch"
 fi
 sudo sshfs -o allow_other,password_stdin,reconnect,ServerAliveInterval=15,ServerAliveCountMax=3 $saviopath ~/savio/scratch <<< "$saviokey"
-
-
-Z=$( oathtool --totp -b "$TOKEN" )
-attempt=1
-marks=( '/' '-' '\' '|' )
-while [ "$Y" == "$Z" ];
-do
-    count=10
-    while [[ $count -gt 0 ]]; do
-     printf '%s\r' "Attempt $attempt (login): wait for a new OTP in $(printf %02d $count) seconds ${marks[i++ % ${#marks[@]}]}"
-     count=$((count-1))
-     sleep 1
-    done
-    Z=$( oathtool --totp -b "$TOKEN" )
-    attempt=$((attempt+1))
-done
-sshpass -p "$PLAINCODE$Z" ssh $USERNAME@$NODE.brc.berkeley.edu
