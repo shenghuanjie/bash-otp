@@ -76,13 +76,15 @@ fi
 
 USERNAME=$(echo $CODE | awk '{print $1}')
 PLAINCODE=$(echo $CODE | awk '{print $2}')
-NODE=$(echo $CODE | awk '{print $3}')
-if [[ -z $NODE ]]; then NODE="hpc"; fi
+URL=$(echo $CODE | awk '{print $3}')
+DTN=$(echo $CODE | awk '{print $4}')
+if [[ -z $URL ]]; then URL="hpc.brc.berkeley.edu"; fi
+if [[ -z $DTN ]]; then DTN="dtn.brc.berkeley.edu"; fi
 
 # mount home
 X=$( oathtool --totp -b "$TOKEN" )
 saviokey=$PLAINCODE$X
-saviopath="$USERNAME@dtn.brc.berkeley.edu:/global/home/users/$USERNAME/"
+saviopath="$USERNAME@$DTN:/global/home/users/$USERNAME/"
 if mountpoint -q ~/savio/home; then
     sudo umount -f ~/savio/home
     echo "umount ~/savio/home"
@@ -106,7 +108,7 @@ do
     attempt=$((attempt+1))
 done
 saviokey=$PLAINCODE$Y
-saviopath="$USERNAME@dtn.brc.berkeley.edu:/global/scratch/$USERNAME/"
+saviopath="$USERNAME@$DTN:/global/scratch/$USERNAME/"
 if mountpoint -q ~/savio/scratch; then
     sudo umount -f ~/savio/scratch
     echo "umount ~/savio/scratch"
@@ -128,4 +130,4 @@ do
     Z=$( oathtool --totp -b "$TOKEN" )
     attempt=$((attempt+1))
 done
-sshpass -p "$PLAINCODE$Z" ssh $USERNAME@$NODE.brc.berkeley.edu
+sshpass -p "$PLAINCODE$Z" ssh $USERNAME@$URL
